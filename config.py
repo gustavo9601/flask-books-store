@@ -1,8 +1,9 @@
 class Config:
-    pass
+    SECRET_KEY='PruebaToken'
 
 
 class DevelopmentConfig(Config):
+    SECRET_KEY='PruebaToken'
     DEBUG = True
 
 
