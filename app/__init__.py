@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
+from flaskext.mysql import MySQL
+
+from .models.BookModel import BookModel
 
 app = Flask(__name__)
-
 csrf = CSRFProtect()
+db = MySQL(app)
 
 
 def index():
@@ -18,6 +21,18 @@ def login():
         return "Ok"
     else:
         return render_template('auth/login.html')
+
+
+def list_books():
+    try:
+        books = BookModel.list_books(db)
+        data = {
+            'books': books
+        }
+        return render_template('list_books.html', data=data)
+    except Exception as ex:
+        print(f"Error :{ex}")
+        raise Exception(ex)
 
 
 def page_not_found_404(error):
@@ -35,6 +50,7 @@ def init_app(config):
 
     # Routes
     app.add_url_rule('/', view_func=index, methods=['GET'])
+    app.add_url_rule('/books', view_func=list_books, methods=['GET'])
     app.add_url_rule('/login', view_func=login, methods=['GET', 'POST'])
 
     # Handler Errors
