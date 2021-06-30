@@ -3,6 +3,10 @@ from flask_wtf.csrf import CSRFProtect
 from flaskext.mysql import MySQL
 
 from .models.BookModel import BookModel
+from .models.UserModel import UserModel
+from .models.entities.User import User
+
+
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -15,10 +19,11 @@ def index():
 
 def login():
     if request.method == 'POST':
-        print(request.form)
-        # print(request.form['user'])
-        # print(request.form['password'])
-        return "Ok"
+        user = User(None, request.form['user'], request.form['password'], None)
+        user_logged = UserModel.login(db, user)
+        if user_logged != None:
+            return redirect(url_for('index'))
+        return render_template('auth/login.html')
     else:
         return render_template('auth/login.html')
 
