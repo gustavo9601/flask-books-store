@@ -120,7 +120,7 @@ INSERT INTO `type_user` (`id`, `name`) VALUES
 CREATE TABLE `users` (
   `id` smallint(3) UNSIGNED NOT NULL,
   `user` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
-  `password` char(94) COLLATE utf8_spanish_ci NOT NULL,
+  `password` char(150) COLLATE utf8_spanish_ci NOT NULL,
   `type_user_id` tinyint(1) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
