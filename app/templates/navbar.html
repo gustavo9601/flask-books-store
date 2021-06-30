@@ -5,13 +5,27 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('index') }}">Index</a>
             </li>
+
+            {% if current_user.type_user_id.id == 2 %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('list_books') }}">Books</a>
+            </li>
+            {% endif %}
+
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesion</a>
             </li>
         </ul>
+        <span class="navbar-text">
+              <!--
+              current_user  // variable own flask, where storage the session with the current user sent
+              -->
+            <strong>{{ current_user.user }}</strong> ({{ current_user.type_user_id.name }})
+        </span>
     </div>
 </nav>

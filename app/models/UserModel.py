@@ -14,7 +14,6 @@ class UserModel:
             """
             cursor.execute(sql, (user.user,))
             data = cursor.fetchone()
-            print("data bd > ", data)
             if data:
                 if user.check_password(data[2], user.password):
                     user_logged = User(data[0], data[1], None, None)
