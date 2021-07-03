@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, json
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_wtf.csrf import CSRFProtect
 from flaskext.mysql import MySQL
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Mail
 
 from .models.BookModel import BookModel
 from .models.PurchaseModel import PurchaseModel
@@ -9,12 +10,14 @@ from .models.UserModel import UserModel
 from .models.entities.Book import Book
 from .models.entities.Purchase import Purchase
 from .models.entities.User import User
+from .emails import confirm_buyed
 from .const import *
 
 app = Flask(__name__)
 csrf = CSRFProtect()
 db = MySQL(app)
 login_manager_app = LoginManager(app)
+mail=Mail()
 
 
 # Function own of flask login, to generate the session
@@ -93,10 +96,12 @@ def buy_book():
     data_request = request.get_json()
     data = {}
     try:
-        book = Book(data_request['isbn'], None, None, None, None)
+        # book = Book(data_request['isbn'], None, None, None, None)
+        book = BookModel.read_book(db, data_request['isbn'])
+        print("book.isbn", book.isbn)
         purchase = Purchase(None, book, current_user)
         data['exito'] = PurchaseModel.register_purchase(db, purchase)
-
+        confirm_buyed(mail, current_user, book)
     except Exception as ex:
         data['mensaje'] = ex
         data['exito'] = False
@@ -120,6 +125,9 @@ def init_app(config):
 
     # Init config CSRF
     csrf.init_app(app)
+
+    # Init mail service
+    mail.init_app(app)
 
     # Routes
     app.add_url_rule('/', view_func=index, methods=['GET'])

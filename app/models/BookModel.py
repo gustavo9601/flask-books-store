@@ -2,8 +2,7 @@ from .entities.Author import Author
 from .entities.Book import Book
 
 
-class BookModel():
-
+class BookModel:
     @classmethod
     def list_books(self, db):
         try:
@@ -50,4 +49,22 @@ class BookModel():
             return books
 
         except Exception as ex:
+            raise Exception(ex)
+
+    @classmethod
+    def read_book(cls, db, isbn):
+        try:
+            connection = db.connect()
+            cursor = connection.cursor()
+            sql = """
+                          SELECT isbn, title, year_published, price
+                          FROM books
+                          WHERE isbn = %s
+                      """
+            cursor.execute(sql, (isbn,))
+            data = cursor.fetchone()
+            return Book(data[0], data[1], None, data[2], data[3])
+
+        except Exception as ex:
+            print("error read book > ", ex)
             raise Exception(ex)

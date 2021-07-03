@@ -13,6 +13,8 @@ class PurchaseModel:
                 INSERT INTO purchases (uuid, isbn_book, user_id)
                 VALUES (uuid(), %s, %s)
             """
+            print("purchase.isbn_book.isbn >>> ", purchase.isbn_book.isbn)
+            print("purchase.user_id.id >>> ", purchase.user_id.id)
             cursor.execute(sql, (purchase.isbn_book.isbn, purchase.user_id.id))
             connection.commit()
             return True
