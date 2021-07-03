@@ -4,6 +4,7 @@ venv
 __pycache__
 app/__pycache__
 app/models/__pycache__
+app/models/__pycache__/
 app/models/entities/__pycache__
 
 

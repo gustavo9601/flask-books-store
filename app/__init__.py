@@ -101,7 +101,7 @@ def buy_book():
         print("book.isbn", book.isbn)
         purchase = Purchase(None, book, current_user)
         data['exito'] = PurchaseModel.register_purchase(db, purchase)
-        confirm_buyed(mail, current_user, book)
+        confirm_buyed(app, mail, current_user, book)
     except Exception as ex:
         data['mensaje'] = ex
         data['exito'] = False
