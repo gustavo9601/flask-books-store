@@ -25,3 +25,29 @@ class BookModel():
 
         except Exception as ex:
             raise Exception(ex)
+
+    @classmethod
+    def list_books_sold(cls, db):
+        try:
+            connection = db.connect()
+            cursor = connection.cursor()
+            sql = """
+                    SELECT p.isbn_book, b.title, b.price,
+                    COUNT(p.isbn_book) units_sold
+                    FROM purchases p 
+                    JOIN books b 
+                    ON p.isbn_book = b.isbn
+                    GROUP BY p.isbn_book
+                    ORDER BY 4 DESC, 2 ASC
+                """
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            books = []
+            for row in data:
+                book = Book(row[0], row[1], None, None, row[2])
+                book.units_sold = int(row[3])
+                books.append(book)
+            return books
+
+        except Exception as ex:
+            raise Exception(ex)

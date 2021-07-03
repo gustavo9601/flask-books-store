@@ -23,4 +23,78 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <h2>{{ data.titulo }}</h2>
+    </div>
+    {% if current_user.type_user_id.id == 1 %}
+
+    <!--|length // pipe to get the length of elementos-->
+    {% if data.libros_vendidos|length > 0 %}
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Libro</th>
+                    <th>Unidades Vendidas</th>
+                    <th>Precio Unit.</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- set namspace // permite usar una variable que cambiara de valor en sus parametros como diccionario-->
+                <!-- contador.total -->
+                {% set contador = namespace(total=0) %}
+                {% for l in data.libros_vendidos %}
+                <tr>
+                    <!--  loop.index // variable interna del loop, retorna el indice actual de la iteracion -->
+                    <td>{{ loop.index }}</td>
+                    <td>{{ l.title }}</td>
+                    <td>{{ l.units_sold }}</td>
+                    <td>S/. {{ l.price }}</td>
+                    <td>S/. {{ (l.price * l.units_sold) }}</td>
+                </tr>
+                {% set contador.total = contador.total + (l.price * l.units_sold) %}
+                {% endfor %}
+                <tr>
+                    <td colspan="4"></td>
+                    <td>S/. {{ contador.total }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <h2>A&uacute;n no existen libros vendidos...</h2>
+    </div>
+    {% endif %}
+
+    {% else %}
+
+    {% if data.compras|length > 0 %}
+    {% for c in data.compras %}
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <div class="card mb-4 shadow-sm">
+            {% set url = 'img/portadas/' + c.isbn_book.isbn + '.jpg' %}
+            <img class="card-img-top" src="{{ url_for('static', filename=url) }}" height="320"
+                 alt="{{ c.isbn_book.title }}"/>
+            <div class="card-body">
+                <h5 class="card-title">{{ c.isbn_book.title }} <span style="float: right;">S/. {{ c.isbn_book.price }}</span>
+                </h5>
+                <p class="card-text">Comprado: {{ c.formatted_date() }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <h2>A&uacute;n no has comprado libros...</h2>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
 {% endblock %}

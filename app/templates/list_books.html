@@ -1,9 +1,37 @@
-<body>
-<table>
-    {% for book in data.books %}
-    <tr>
-        <td>{{ book.title }}</td>
-    </tr>
+{% extends './body.html' %}
+
+{% block title %}Listado de Libros{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <h1>{{ data.titulo }}</h1>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    {% for libro in data.books %}
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <div class="card mb-4 shadow-sm">
+            <!--set => permite definir variables temporales en la vista-->
+            {% set url = 'img/portadas/' + libro.isbn + '.jpg' %}
+            <img class="card-img-top" src="{{ url_for('static', filename=url) }}" height="320" alt="{{ libro.title }}" />
+            <div class="card-body">
+                <h5 class="card-title">{{ libro.title }} <span style="float: right;">S/. {{ libro.price }}</span></h5>
+                <p class="card-text">{{ libro.author.full_name() }}</p>
+                <button id="{{ libro.isbn }}" class="btn btn-block btn-primary btnComprarLibro">Comprar</button>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</table>
-</body>
+    <input type="hidden" name="csrf-token" value="{{ csrf_token() }}">
+</div>
+{% endblock %}
+
+{% block customJS %}
+<script src="{{ url_for('static', filename='lib/sweetalert2-9.10.0/sweetalert2.all.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/notificacionSwal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/listado_libros.js') }}"></script>
+{% endblock %}
