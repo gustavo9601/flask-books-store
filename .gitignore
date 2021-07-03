@@ -1,7 +1,9 @@
 venv
 .env
 .idea
-__pycache__
+*.py[cod]
+*$py.class
+__pycache__/
 app/__pycache__
 app/models/__pycache__
 app/models/__pycache__/
